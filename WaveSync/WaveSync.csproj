@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Builds with the .NET 8 SDK or newer. Change to net10.0-windows if you prefer the newer runtime. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>WaveSync</AssemblyName>
+    <RootNamespace>WaveSync</RootNamespace>
+    <Product>WaveSync</Product>
+    <Version>1.0.0</Version>
+    <!-- Hand-written COM interop for Core Audio needs the built-in COM marshaller. -->
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <!-- DllImport is fine here; silence the "use LibraryImport" suggestion. -->
+    <NoWarn>$(NoWarn);SYSLIB1054;CA1416</NoWarn>
+  </PropertyGroup>
+
+</Project>

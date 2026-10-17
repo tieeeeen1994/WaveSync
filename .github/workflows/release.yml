@@ -1,0 +1,37 @@
+name: Release
+
+# Runs only when a version tag is pushed, e.g.:  git tag v1.2.0 && git push origin v1.2.0
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Get version from tag
+        id: version
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      # Same settings as build.cmd, plus the tag's version stamped into the exe.
+      - name: Publish
+        run: >
+          dotnet publish WaveSync/WaveSync.csproj -c Release -r win-x64 --self-contained false
+          -p:PublishSingleFile=true -p:Version=${{ steps.version.outputs.version }} -o publish
+
+      - name: Create GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" publish/WaveSync.exe --title "WaveSync $GITHUB_REF_NAME" --generate-notes
