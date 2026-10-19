@@ -69,6 +69,18 @@ Windows and Wave Link use different IDs and sometimes different names, so WaveSy
 
 If one of Wave Link's own virtual devices shows up as a normal device, add part of its name to `virtualDeviceNamePatterns`.
 
+## If you hear your own mic (NVIDIA Broadcast + Wave Link)
+
+This isn't caused by WaveSync, but it's easy to mistake for a routing problem.
+
+**Symptom:** after a restart you hear your own voice through one of Wave Link's channels (for example Voice chat), even though the mic channel isn't in your Personal Mix. Removing the mic channel in Wave Link and adding it back fixes it until the next restart.
+
+**Cause:** NVIDIA Broadcast's **Speakers** effect finds its own virtual speaker device by searching device names for "NVIDIA Broadcast". Wave Link names the Windows device for a mic channel after the channel, so an NVIDIA Broadcast mic channel creates a device called "Microphone (NVIDIA Broadcast)", which also matches. When Windows lists that device first, NVIDIA Broadcast takes your mic as the Speakers effect's input and plays it to the effect's output (a Wave Link channel). Which device comes first varies between restarts, so the problem only happens sometimes. The order in which the apps start doesn't matter.
+
+**Fix:** in Wave Link, rename the mic channel to something without "NVIDIA Broadcast" in it (for example "Mic"). If you don't use NVIDIA Broadcast's Speakers effect, turning it off works too.
+
+If it comes back, check that a Wave Link update or re-adding the mic hasn't reset the channel name. NVIDIA Broadcast's log (`C:\ProgramData\NVIDIA Corporation\NVIDIA Broadcast\logs`, look for `FindIDByName`) shows which device it picked.
+
 ## Files
 
 - `%APPDATA%\WaveSync\config.json`: settings
